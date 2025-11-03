@@ -295,10 +295,8 @@ export const guest = (() => {
       ?.addEventListener("click", () => window.open(url, "_blank"));
   };
 
-  // 🛠️ MOVE THE FUNCTION DEFINITION HERE
   const sendGoogleApiPost = () => {
-    console.warn("TESTINGGGGGG"); // Changed from 'TESSTTTTT' for clarity
-    // ... (rest of your POST logic goes here)
+    console.warn("TESSTTTTT");
     const button = document.getElementById("api-post-button");
     if (button) {
       button.textContent = "It Works!";
