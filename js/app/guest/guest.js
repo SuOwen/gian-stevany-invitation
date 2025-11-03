@@ -266,6 +266,16 @@ export const guest = (() => {
         document.querySelector('#home button')?.addEventListener('click', () => window.open(url, '_blank'));
     };
 
+    // 🛠️ MOVE THE FUNCTION DEFINITION HERE
+const sendGoogleApiPost = async () => {
+    console.log('API POST CALLED'); // Changed from 'TESSTTTTT' for clarity
+    // ... (rest of your POST logic goes here)
+    const button = document.getElementById('api-post-button');
+    if (button) {
+        button.textContent = 'It Works!';
+    }
+}
+
     /**
      * @returns {object}
      */
@@ -307,10 +317,13 @@ export const guest = (() => {
         }
 
         // wait until welcome screen is show.
-        await util.changeOpacity(document.getElementById('welcome'), true);
+        // await util.changeOpacity(document.getElementById('welcome'), true);
 
         // remove loading screen and show welcome screen.
-        await util.changeOpacity(document.getElementById('loading'), false).then((el) => el.remove());
+        // await util.changeOpacity(document.getElementById('loading'), false).then((el) => el.remove());
+
+        document.getElementById('root').classList.remove('opacity-0');
+        document.getElementById('root').style.opacity = '1';
     };
 
     /**
@@ -320,7 +333,7 @@ export const guest = (() => {
         lang.init();
         offline.init();
         comment.init();
-        progress.init();
+        // progress.init();
 
         config = storage('config');
         information = storage('information');
@@ -333,7 +346,8 @@ export const guest = (() => {
         const params = new URLSearchParams(window.location.search);
 
         window.addEventListener('resize', util.debounce(slide));
-        document.addEventListener('undangan.progress.done', () => booting());
+        // document.addEventListener('undangan.progress.done', () => booting());
+        booting();
         document.addEventListener('hide.bs.modal', () => document.activeElement?.blur());
         document.getElementById('button-modal-download').addEventListener('click', (e) => {
             img.download(e.currentTarget.getAttribute('data-src'));
@@ -380,12 +394,16 @@ export const guest = (() => {
         }
     };
 
+  
+
     /**
      * @returns {object}
      */
     const init = () => {
         theme.init();
         session.init();
+
+        window.sendGoogleApiPost = sendGoogleApiPost;
 
         if (session.isAdmin()) {
             storage('user').clear();
