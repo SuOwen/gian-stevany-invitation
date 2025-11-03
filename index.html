@@ -134,7 +134,6 @@
       crossorigin="anonymous"
     ></script>
     <script src="./dist/guest.js"></script>
-    <script src="./js/app/guest/guest.js"></script>
   </head>
 
   <!-- Jika tidak menggunakan komentar, hapus atribut data-key dan data-url, serta abaikan file dashboard.html. -->
@@ -218,6 +217,7 @@
                 <i class="fa-solid fa-calendar-check me-2"></i>Save Google
                 Calendar
               </button>
+              <button onclick="sendGoogleApiPost()">tes</button>
 
               <!-- <div class="d-flex justify-content-center align-items-center mt-4 mb-2">
                             <div class="mouse-animation border border-secondary border-2 rounded-5 px-2 py-1 opacity-50">
@@ -238,14 +238,6 @@
 
           <!-- Bride -->
           <section class="text-center" id="bride">
-            <button onclick="sendGoogleApiPostV2()">tes</button>
-
-            <script>
-              function sendGoogleApiPostV2() {
-                console.log("sendGoogleApiPost function called");
-              }
-            </script>
-
             <h2 class="font-esthetic py-4 m-0" style="font-size: 2rem">
               "The greatest happiness that happens in life is the marriage that
               binds the two loving hearts become one."
@@ -1381,41 +1373,6 @@
     </div>
 
     <!-- Welcome Page -->
-    <div class="loading-page" id="welcome" style="opacity: 0">
-      <div
-        class="d-flex justify-content-center align-items-center vh-100 overflow-y-auto"
-      >
-        <div class="d-flex flex-column text-center">
-          <h2 class="font-esthetic mb-4" style="font-size: 2.25rem">
-            The Wedding Of
-          </h2>
-
-          <img
-            src="./assets/images/placeholder.webp"
-            data-src="./assets/images/bg.webp"
-            alt="background"
-            class="img-center-crop rounded-circle border border-3 border-light shadow mb-4 mx-auto"
-          />
-
-          <h2 class="font-esthetic mb-4" style="font-size: 2.25rem">
-            Wahyu &amp; Riski
-          </h2>
-          <div
-            id="guest-name"
-            data-message="Kepada Yth Bapak/Ibu/Saudara/i"
-          ></div>
-
-          <button
-            type="button"
-            class="btn btn-light shadow rounded-4 mt-3 mx-auto"
-            onclick="undangan.guest.open(this)"
-          >
-            <i class="fa-solid fa-envelope-open fa-bounce me-2"></i>Open
-            Invitation
-          </button>
-        </div>
-      </div>
-    </div>
 
     <!-- Button Group -->
     <div
