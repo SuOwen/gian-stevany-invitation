@@ -71,6 +71,14 @@ html[data-bs-theme="dark"] .bg-white-black {
     background-color: rgb(var(--bs-black-rgb));
 }
 
+html[data-bs-theme="dark"] .welcome-page {
+    background-color: rgb(var(--bs-black-rgb)); /* fallback if image fails */
+    background-image: url('./assets/images/welcome-bg.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+
 .bg-cover-home {
     width: 100%;
     height: 100%;

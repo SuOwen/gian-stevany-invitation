@@ -184,7 +184,9 @@ export const guest = (() => {
     util.timeOut(confetti.openAnimation, 1500);
 
     document.dispatchEvent(new Event("undangan.open"));
+    util.changeOpacity(document.getElementById('welcome'), false).then((el) => el.remove());
   };
+
 
   /**
    * @param {HTMLImageElement} img
@@ -327,7 +329,7 @@ export const guest = (() => {
   /**
    * @returns {Promise<void>}
    */
-  const booting = () => {
+  const booting = async() => {
     animateSvg();
     countDownDate();
     showGuestName();
@@ -348,7 +350,7 @@ export const guest = (() => {
     }
 
     // wait until welcome screen is show.
-    // await util.changeOpacity(document.getElementById('welcome'), true);
+    await util.changeOpacity(document.getElementById('welcome'), true);
 
     // remove loading screen and show welcome screen.
     // await util.changeOpacity(document.getElementById('loading'), false).then((el) => el.remove());
