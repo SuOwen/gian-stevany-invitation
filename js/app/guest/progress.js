@@ -44,17 +44,19 @@ export const progress = (() => {
       return;
     }
 
-    loaded += 1;
-    info.innerText = `Loading ${type} ${
-      skip ? "skipped" : "complete"
-    } ${showInformation()}`;
-    bar.style.width = Math.min((loaded / total) * 100, 100).toString() + "%";
+    document.dispatchEvent(new Event("undangan.progress.done"));
 
-    if (loaded === total) {
-      valid = false;
-      cancelProgress = null;
-      document.dispatchEvent(new Event("undangan.progress.done"));
-    }
+    // loaded += 1;
+    // info.innerText = `Loading ${type} ${
+    //   skip ? "skipped" : "complete"
+    // } ${showInformation()}`;
+    // bar.style.width = Math.min((loaded / total) * 100, 100).toString() + "%";
+
+    // if (loaded === total) {
+    //   valid = false;
+    //   cancelProgress = null;
+    //   document.dispatchEvent(new Event("undangan.progress.done"));
+    // }
   };
 
   /**

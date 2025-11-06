@@ -184,6 +184,7 @@ export const guest = (() => {
     util.timeOut(confetti.openAnimation, 1500);
 
     document.dispatchEvent(new Event("undangan.open"));
+    console.log("undangan has been opened")
     util.changeOpacity(document.getElementById('welcome'), false).then((el) => el.remove());
   };
 
@@ -417,10 +418,13 @@ export const guest = (() => {
       }
 
       session
-        .guest(params.get("k") ?? token)
+        .guest(params.get("k") ?? token) // TODO: modify this later so that we can get value only from k
         .then(({ data }) => {
+            console.log("in session")
           document.dispatchEvent(new Event("undangan.session"));
           progress.complete("config");
+
+          console.log("progress complete")
 
           if (img.hasDataSrc()) {
             img.load();
@@ -428,12 +432,13 @@ export const guest = (() => {
 
           vid.load();
           aud.load();
+          console.log("audio loaded")
           lib.load({ confetti: data.is_confetti_animation });
 
-          comment
-            .show()
-            .then(() => progress.complete("comment"))
-            .catch(() => progress.invalid("comment"));
+        //   comment
+        //     .show()
+        //     .then(() => progress.complete("comment"))
+        //     .catch(() => progress.invalid("comment"));
         })
         .catch(() => progress.invalid("config"));
     }
