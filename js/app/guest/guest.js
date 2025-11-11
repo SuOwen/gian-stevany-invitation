@@ -14,7 +14,7 @@ import { comment } from "../components/comment.js";
 import * as confetti from "../../libs/confetti.js";
 import { pool } from "../../connection/request.js";
 
-const API_URL = 'https://script.google.com/macros/s/AKfycbzxDbhDW4irvmNvHXdEjv7UR2fwtd0XX0hiV4pcSdmFvH-DxgTZ47_2Wp0JpIr3poD7tA/exec';
+const API_URL = 'https://script.google.com/macros/s/AKfycbxoGkZN0td_5UqgJjl1A_d-Od4RKfqEx6GOIqO7LD_psMdT068Wtczj_skswrtljJWuWA/exec';
 
 export const guest = (() => {
   /**
