@@ -294,7 +294,11 @@ const displayError = (message) => {
             console.log('Verification Success:', result.message);
             // --- START: Original Success Logic ---
 
+            // Resepsi only or Both
             personalizeInvitationView(result.invitationType);
+
+            // number of guests
+            populatePaxOptions(result.pax);
 
             button.disabled = true;
             document.body.scrollIntoView({ behavior: "instant" });
@@ -418,6 +422,33 @@ const displayError = (message) => {
     }
 };
 
+    const populatePaxOptions = (maxPax) => {
+        const selectElement = document.getElementById('form-presence');
+        if (!selectElement) return;
+
+        // Clear previous dynamic options (keep the default placeholder)
+        while (selectElement.options.length > 1) {
+            selectElement.remove(1);
+        }
+
+        const validMaxPax = parseInt(maxPax, 10);
+
+        if (validMaxPax > 0) {
+            for (let i = 1; i <= validMaxPax; i++) {
+                const option = document.createElement('option');
+                option.value = i.toString();
+                option.textContent = i.toString();
+                selectElement.appendChild(option);
+            }
+        } else {
+            // If PAX is 0 or invalid, maybe just show option '1'
+            const option = document.createElement('option');
+            option.value = "1";
+            option.textContent = "1";
+            selectElement.appendChild(option);
+        }
+        console.log(`Dropdown populated with options 1 to ${validMaxPax || 1}.`);
+    };
 
 
   /**
