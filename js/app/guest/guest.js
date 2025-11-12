@@ -79,57 +79,68 @@ const getGuestUuid = () => {
     return params.get('authToken') ? decodeURIComponent(params.get('authToken')).trim() : null;
 };
 
-const checkGuestExistence = async () => {
-    const guestName = getGuestName();
-    const guestUuid = getGuestUuid();
-    const openButton = document.getElementById('open-invitation-button');
+// const checkGuestExistence = async () => {
+//     const guestName = getGuestName();
+//     const guestUuid = getGuestUuid();
+//     const openButton = document.getElementById('open-invitation-button');
 
-    if (guestName === 'Unknown Guest' || !guestUuid) {
-        displayError('Cannot open invitation: Guest name or security token (UUID) is missing from the web link.');
-        return;
-    }
+//     if (guestName === 'Unknown Guest' || !guestUuid) {
+//         displayError('Cannot open invitation: Guest name or security token (UUID) is missing from the web link.');
+//         return;
+//     }
     
-    if (openButton) {
-        openButton.disabled = true;
-        openButton.textContent = 'Checking Security Token... 🛡️';
-    }
+//     if (openButton) {
+//         openButton.disabled = true;
+//         openButton.textContent = 'Checking Security Token... 🛡️';
+//     }
 
-    // Construct the GET URL by appending both parameters
-    const getUrl = `${API_URL}?name=${encodeURIComponent(guestName)}&uuid=${encodeURIComponent(guestUuid)}`;
+//     // Construct the GET URL by appending both parameters
+//     const getUrl = `${API_URL}?name=${encodeURIComponent(guestName)}&uuid=${encodeURIComponent(guestUuid)}`;
 
-    try {
-        const response = await fetch(getUrl);
-        const result = await response.json();
+//     try {
+//         const response = await fetch(getUrl, {
+//             redirect: "follow",
+//             method: "GET",
+//             // body: JSON.stringify(DATA),
+//             headers: {
+//               "Content-Type": "text/plain;charset=utf-8",
+//             },
+//         });
+//         const result = await response.json();
 
-        if (response.ok && result.status === 'success') {
-            console.log('Verification Success:', result.message);
-            // Hide the open button/entry screen and show the invitation content
-            document.getElementById('entry-screen').style.display = 'none';
-            document.getElementById(INVITATION_CONTAINER_ID).style.display = 'block';
+//         if (response.ok && result.status === 'success') {
+//             console.log('Verification Success:', result.message);
+//             // Hide the open button/entry screen and show the invitation content
+//             document.getElementById('entry-screen').style.display = 'none';
+//             document.getElementById(INVITATION_CONTAINER_ID).style.display = 'block';
+
+//             // HM or Both
+//             console.log("check invitation type: ", result.invitationType)
+//             personalizeInvitationView(result.invitationType);
             
-            // Personalize the invitation (e.g., update a welcome message)
-            const welcomeElement = document.getElementById('guest-welcome-name');
-            if (welcomeElement) {
-                welcomeElement.textContent = guestName;
-            }
+//             // Personalize the invitation (e.g., update a welcome message)
+//             const welcomeElement = document.getElementById('guest-welcome-name');
+//             if (welcomeElement) {
+//                 welcomeElement.textContent = guestName;
+//             }
 
-        } else if (result.status === 'unauthorized') {
-            displayError(result.message); // This will show the "Access Denied" message
-        } else {
-            // Handle other errors (server error, missing parameter)
-            displayError(result.message || 'An unexpected error occurred during verification.');
-        }
+//         } else if (result.status === 'unauthorized') {
+//             displayError(result.message); // This will show the "Access Denied" message
+//         } else {
+//             // Handle other errors (server error, missing parameter)
+//             displayError(result.message || 'An unexpected error occurred during verification.');
+//         }
 
-    } catch (error) {
-        console.error('Network error during existence check:', error);
-        displayError('A network error occurred. Please check your connection.');
-    } finally {
-        if (openButton) {
-             openButton.disabled = false;
-             openButton.textContent = 'Open Invitation';
-        }
-    }
-};
+//     } catch (error) {
+//         console.error('Network error during existence check:', error);
+//         displayError('A network error occurred. Please check your connection.');
+//     } finally {
+//         if (openButton) {
+//              openButton.disabled = false;
+//              openButton.textContent = 'Open Invitation';
+//         }
+//     }
+// };
 
 /**
  * Helper function to display an error message and disable the invitation container.
@@ -145,12 +156,13 @@ const displayError = (message) => {
     // if (invitationContent) {
     //     invitationContent.style.display = 'none'; // Ensure the actual invitation is hidden
     // }
+    console.log(message)
 };
 
 // --- Note: The sendAttendanceUpdate function is omitted for brevity but is also in guest.js ---
 
 // Expose functions globally so they can be called by HTML buttons
-window.checkGuestExistence = checkGuestExistence;
+// window.checkGuestExistence = checkGuestExistence;
 
   /**
    * @returns {void}
@@ -266,7 +278,7 @@ window.checkGuestExistence = checkGuestExistence;
         // Fallback for missing URL params
         displayError('Cannot open invitation: Guest name or security token (UUID) is missing from the web link.');
         button.disabled = true;
-        button.textContent = originalText;
+        button.textContent = 'You are not invited';
         console.log("INVALID AUTH TOKEN: Missing parameters.");
         return;
     }
@@ -281,49 +293,68 @@ window.checkGuestExistence = checkGuestExistence;
         if (response.ok && result.status === 'success') {
             console.log('Verification Success:', result.message);
             // --- START: Original Success Logic ---
+
+            personalizeInvitationView(result.invitationType);
+
+            button.disabled = true;
+            document.body.scrollIntoView({ behavior: "instant" });
+            document.getElementById("root").classList.remove("opacity-0");
+
+            if (theme.isAutoMode()) {
+            document.getElementById("button-theme").classList.remove("d-none");
+            }
+
+            slide();
+            theme.spyTop();
+
+            // confetti.basicAnimation();
+            // util.timeOut(confetti.openAnimation, 1500);
+
+            document.dispatchEvent(new Event("undangan.open"));
+            util.changeOpacity(document.getElementById('welcome'), false).then((el) => el.remove());
             
             // Re-enable the button *before* executing the rest of the logic if needed,
             // or just rely on the upcoming scroll to hide the button/welcome screen.
-            button.disabled = false; 
+            // button.disabled = false; 
 
-            document.body.scrollIntoView({ behavior: "instant" });
+            // document.body.scrollIntoView({ behavior: "instant" });
             
-            const rootElement = document.getElementById("root");
-            if (rootElement) {
-                rootElement.classList.remove("opacity-0");
-            }
+            // const rootElement = document.getElementById("root");
+            // if (rootElement) {
+            //     rootElement.classList.remove("opacity-0");
+            // }
             
-            // Theme logic (assuming 'theme' is globally available)
-            if (typeof theme !== 'undefined' && typeof theme.isAutoMode === 'function' && theme.isAutoMode()) {
-              const themeButton = document.getElementById("button-theme");
-              if (themeButton) {
-                  themeButton.classList.remove("d-none");
-              }
-            }
+            // // Theme logic (assuming 'theme' is globally available)
+            // if (typeof theme !== 'undefined' && typeof theme.isAutoMode === 'function' && theme.isAutoMode()) {
+            //   const themeButton = document.getElementById("button-theme");
+            //   if (themeButton) {
+            //       themeButton.classList.remove("d-none");
+            //   }
+            // }
 
-            // Other global functions (assuming slide, theme, and util objects exist)
-            if (typeof slide === 'function') slide();
-            if (typeof theme !== 'undefined' && typeof theme.spyTop === 'function') theme.spyTop();
+            // // Other global functions (assuming slide, theme, and util objects exist)
+            // if (typeof slide === 'function') slide();
+            // if (typeof theme !== 'undefined' && typeof theme.spyTop === 'function') theme.spyTop();
             
-            // Show the invitation and hide the entry screen (assuming your layout uses entry-screen)
-            const entryScreen = document.getElementById('entry-screen');
-            if (entryScreen) entryScreen.style.display = 'none';
-            document.getElementById(INVITATION_CONTAINER_ID).style.display = 'block'; 
+            // // Show the invitation and hide the entry screen (assuming your layout uses entry-screen)
+            // const entryScreen = document.getElementById('entry-screen');
+            // if (entryScreen) entryScreen.style.display = 'none';
+            // document.getElementById(INVITATION_CONTAINER_ID).style.display = 'block'; 
             
-            // Personalize the welcome message
-            const welcomeElement = document.getElementById('guest-welcome-name');
-            if (welcomeElement) {
-                welcomeElement.textContent = guestName;
-            }
+            // // Personalize the welcome message
+            // const welcomeElement = document.getElementById('guest-welcome-name');
+            // if (welcomeElement) {
+            //     welcomeElement.textContent = guestName;
+            // }
 
-            // Final dispatch and removal
-            document.dispatchEvent(new Event("undangan.open"));
-            const welcomeRemovalElement = document.getElementById('welcome');
-            if (typeof util !== 'undefined' && typeof util.changeOpacity === 'function' && welcomeRemovalElement) {
-                 util.changeOpacity(welcomeRemovalElement, false).then((el) => el.remove());
-            } else if (welcomeRemovalElement) {
-                 welcomeRemovalElement.remove();
-            }
+            // // Final dispatch and removal
+            // document.dispatchEvent(new Event("undangan.open"));
+            // const welcomeRemovalElement = document.getElementById('welcome');
+            // if (typeof util !== 'undefined' && typeof util.changeOpacity === 'function' && welcomeRemovalElement) {
+            //      util.changeOpacity(welcomeRemovalElement, false).then((el) => el.remove());
+            // } else if (welcomeRemovalElement) {
+            //      welcomeRemovalElement.remove();
+            // }
             // --- END: Original Success Logic ---
             
         } else {
@@ -334,7 +365,7 @@ window.checkGuestExistence = checkGuestExistence;
             
             // Keep button disabled until user refreshes or corrects the URL
             button.disabled = true; 
-            button.textContent = originalText;
+            button.textContent = 'You are not invited';
         }
 
     } catch (error) {
@@ -342,7 +373,7 @@ window.checkGuestExistence = checkGuestExistence;
         displayError('A network error occurred. Please check your connection.');
         
         button.disabled = false;
-        button.textContent = originalText;
+        button.textContent = 'You are not invited';
     }
 
     // const params = new URLSearchParams(window.location.search);
@@ -370,6 +401,23 @@ window.checkGuestExistence = checkGuestExistence;
     // document.dispatchEvent(new Event("undangan.open"));
     // util.changeOpacity(document.getElementById('welcome'), false).then((el) => el.remove());
   };
+
+  const personalizeInvitationView = (invitationType) => {
+    console.log("INVITATION TYPE: ", invitationType)
+    const receptionDiv = document.getElementById('reception-details');
+    // If invitationType is '1' (HM Only), hide the reception section.
+    // We treat null/empty/1 as HM Only.
+    if (receptionDiv && (invitationType === '1' || !invitationType)) {
+        receptionDiv.style.display = 'none';
+        console.log("Showing Holy Matrimony only.");
+    } else {
+        if (receptionDiv) {
+            receptionDiv.style.display = 'block';
+        }
+        console.log("Showing both Holy Matrimony and Reception.");
+    }
+};
+
 
 
   /**
