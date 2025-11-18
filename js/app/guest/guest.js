@@ -223,13 +223,15 @@ export const guest = (() => {
 
       const template = `<small class="mt-0 mb-1 mx-0 p-0">${util.escapeHtml(
         guestName?.getAttribute("data-message")
-      )}</small><p class="m-0 p-0" style="font-size: 1.25rem; font-family: 'Poppins', sans-serif;">${util.escapeHtml(
+      )}</small><p class="m-0 p-0" style="font-size: 1.25rem; font-family: 'Josefin Sans';">${util.escapeHtml(
         name
       )}</p>`;
       util.safeInnerHTML(div, template);
 
       guestName?.appendChild(div);
     }
+
+    document.getElementById("form-name").value = getGuestName();
 
     const form = document.getElementById("form-name");
     if (form) {
