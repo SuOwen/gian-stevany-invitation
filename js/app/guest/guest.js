@@ -286,7 +286,8 @@ const displayError = (message) => {
     const getUrl = `${API_URL}?name=${encodeURIComponent(guestName)}&uuid=${encodeURIComponent(guestUuid)}`;
 
     try {
-        const response = await fetch(getUrl);
+        // const response = await fetch(getUrl);
+        const response = await fetchWithRetry(checkUrl, { method: 'GET' }, 5); // Increased max retries to 5 for initial check
         const result = await response.json();
 
         // 3. Check API result
@@ -405,6 +406,35 @@ const displayError = (message) => {
     // document.dispatchEvent(new Event("undangan.open"));
     // util.changeOpacity(document.getElementById('welcome'), false).then((el) => el.remove());
   };
+
+    const fetchWithRetry = async (url, options = {}, maxRetries = 3) => {
+        let lastError = null;
+        for (let i = 0; i < maxRetries; i++) {
+            try {
+                const response = await fetch(url, options);
+
+                // Success (status 200-299) or known client errors (400, 401, 404, etc.)
+                if (response.status !== 429 && response.status !== 503) {
+                    return response;
+                }
+
+                // Handle 429 (Too Many Requests) or 503 (Service Unavailable)
+                lastError = new Error(`Retryable server error: Status ${response.status}`);
+                console.warn(`Attempt ${i + 1}/${maxRetries} failed with ${response.status}. Retrying...`);
+
+            } catch (error) {
+                // Handle network errors (e.g., DNS lookup failure, connection refused)
+                lastError = error;
+                console.error(`Attempt ${i + 1}/${maxRetries} failed with network error:`, error);
+            }
+
+            // Calculate exponential backoff delay (1s, 2s, 4s, plus random jitter)
+            const delay = Math.pow(2, i) * 1000 + (Math.random() * 1000);
+            await sleep(delay);
+        }
+
+        throw new Error(`Failed after ${maxRetries} retries. Last error: ${lastError.message}`);
+    };
 
   const personalizeInvitationView = (invitationType) => {
     console.log("INVITATION TYPE: ", invitationType)
