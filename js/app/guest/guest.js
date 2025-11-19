@@ -84,69 +84,6 @@ export const guest = (() => {
       : null;
   };
 
-  // const checkGuestExistence = async () => {
-  //     const guestName = getGuestName();
-  //     const guestUuid = getGuestUuid();
-  //     const openButton = document.getElementById('open-invitation-button');
-
-  //     if (guestName === 'Unknown Guest' || !guestUuid) {
-  //         displayError('Cannot open invitation: Guest name or security token (UUID) is missing from the web link.');
-  //         return;
-  //     }
-
-  //     if (openButton) {
-  //         openButton.disabled = true;
-  //         openButton.textContent = 'Checking Security Token... 🛡️';
-  //     }
-
-  //     // Construct the GET URL by appending both parameters
-  //     const getUrl = `${API_URL}?name=${encodeURIComponent(guestName)}&uuid=${encodeURIComponent(guestUuid)}`;
-
-  //     try {
-  //         const response = await fetch(getUrl, {
-  //             redirect: "follow",
-  //             method: "GET",
-  //             // body: JSON.stringify(DATA),
-  //             headers: {
-  //               "Content-Type": "text/plain;charset=utf-8",
-  //             },
-  //         });
-  //         const result = await response.json();
-
-  //         if (response.ok && result.status === 'success') {
-  //             console.log('Verification Success:', result.message);
-  //             // Hide the open button/entry screen and show the invitation content
-  //             document.getElementById('entry-screen').style.display = 'none';
-  //             document.getElementById(INVITATION_CONTAINER_ID).style.display = 'block';
-
-  //             // HM or Both
-  //             console.log("check invitation type: ", result.invitationType)
-  //             personalizeInvitationView(result.invitationType);
-
-  //             // Personalize the invitation (e.g., update a welcome message)
-  //             const welcomeElement = document.getElementById('guest-welcome-name');
-  //             if (welcomeElement) {
-  //                 welcomeElement.textContent = guestName;
-  //             }
-
-  //         } else if (result.status === 'unauthorized') {
-  //             displayError(result.message); // This will show the "Access Denied" message
-  //         } else {
-  //             // Handle other errors (server error, missing parameter)
-  //             displayError(result.message || 'An unexpected error occurred during verification.');
-  //         }
-
-  //     } catch (error) {
-  //         console.error('Network error during existence check:', error);
-  //         displayError('A network error occurred. Please check your connection.');
-  //     } finally {
-  //         if (openButton) {
-  //              openButton.disabled = false;
-  //              openButton.textContent = 'Open Invitation';
-  //         }
-  //     }
-  // };
-
   /**
    * Helper function to display an error message and disable the invitation container.
    */
